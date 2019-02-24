@@ -1,23 +1,37 @@
 const panSpeed = 4;
 const gravity = 1;
 
+
 let player;
 let pipes;
 let pipes2;
 let ground;
 
-let end = false;
-let pipeCount = 0;
-let randomPipeHeights = [];
+let timestep
+  ,highscore
+  ,players
+  ,deadCount
+  ,gameEnd
+  ,pipeCount
+  ,randomPipeHeights;
+
+initNeat();
 
 function setup() {
   window.canvas = createCanvas(600,800);
-  player = new Player();
+  gameEnd = false;
+  highscore = 0;
+  timestep = 0;
+  pipeCount = 0;
+  deadCount = 0;
+  randomPipeHeights = [];
+
   pipes = new Pipes(true);
-  pipes2 = new Pipes(false, pipes, pipeRandomNo);
+  pipes2 = new Pipes(false, pipes, pipeCount);
   pipes2.setX(1.5 * canvas.width + pipes2.topPipe.width/2);
   ground = new Ground();
-  end = false;
+
+  startEvaluation();
 }
 
 function draw() {
@@ -34,6 +48,13 @@ function draw() {
     pipes2 = new Pipes(false, pipes, pipeCount);
     pipeCount++;
   }
+
+  timestep++;
+
+  if(gameEnd) {
+    endEvaluation();
+    setup();
+  }
 }
 
 function writeInfo() {
@@ -41,33 +62,48 @@ function writeInfo() {
   stroke(255);
   textSize(50);
   textAlign(CENTER);
-  text(player.score, canvas.width / 2, 50);
+  text(highscore, canvas.width / 2, 50);
 }
 
-function keyPressed() {
-  console.log(key);
-  switch (key) {
-    case ' ': //play
-      player.flap();
-      break;
-    case 'Enter': //new game
-      setup();
-      break;
-  }
-}
+// function keyPressed() {
+//   console.log(key);
+//   switch (key) {
+//     case ' ': //play
+//       player.flap();
+//       break;
+//     case 'Enter': //new game
+//       setup();
+//       break;
+//   }
+// }
 
 function showAll() {
   pipes.show();
   pipes2.show();
-  player.show();
   ground.show();
+  showPlayers();
 }
 
 function updateAll() {
-  if (!end) {
+  if (!gameEnd) {
     pipes.update();
     pipes2.update();
     ground.update();
   }
-  player.update();
+  updatePlayers();
+}
+
+function updatePlayers() {
+  players.map( player => {
+    player.update();
+  });
+  if(deadCount >= players.length) {
+    gameEnd = true;
+  }
+}
+
+function showPlayers() {
+  players.map( player => {
+    player.show();
+  });
 }

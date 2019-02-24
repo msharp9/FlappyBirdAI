@@ -74,6 +74,7 @@ class Pipes {
   update() {
     this.bottomPipe.update();
     this.topPipe.update();
+    this.x = this.topPipe.x + this.topPipe.width;
   }
 
   offScreen() {
