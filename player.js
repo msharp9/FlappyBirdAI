@@ -31,9 +31,10 @@ class Player {
   }
 
   show() {
-    noStroke();
-    fill(255,255,0);
-    ellipse(this.x, this.y, this.size);
+    // noStroke();
+    // fill(255,255,0);
+    // ellipse(this.x, this.y, this.size);
+    image(birdSprite, this.x, this.y, this.size, this.size);
   }
 
   update() {

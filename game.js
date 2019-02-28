@@ -15,6 +15,18 @@ let timestep
   ,pipeCount
   ,randomPipeHeights;
 
+let birdSprite
+  ,backgroundSprite
+  ,topPipeSprite
+  ,bottomPipeSprite;
+
+function preload() {
+  birdSprite = loadImage("img/bird.png");
+  topPipeSprite = loadImage("img/pipetop.png");
+  bottomPipeSprite = loadImage("img/pipebottom.png");
+  backgroundSprite = loadImage("img/background.png");
+}
+
 initNeat();
 
 function setup() {
@@ -35,7 +47,8 @@ function setup() {
 }
 
 function draw() {
-  background(135,206,250); // blue sky!
+  // background(135,206,250); // blue sky!
+  image(backgroundSprite, 0, 0, canvas.width, canvas.height);
   showAll();
   updateAll();
   writeInfo();

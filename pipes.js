@@ -14,9 +14,15 @@ class Pipe {
   }
 
   show() {
-    noStroke();
-    fill(0, 204, 0);
-    rect(this.x, this.topy, this.width, this.height);
+    // noStroke();
+    // fill(0, 204, 0);
+    // rect(this.x, this.topy, this.width, this.height);
+    // image(bottomPipeSprite, this.x, this.topy, this.width, this.height);
+    if(this.isTop) {
+      image(topPipeSprite, this.x, this.topy, this.width, this.height);
+    } else {
+      image(bottomPipeSprite, this.x, this.topy, this.width, this.height);
+    }
   }
 
   update() {
