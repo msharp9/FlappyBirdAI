@@ -7,12 +7,12 @@ const Architect = neataptic.architect;
 Config.warnings = false;
 
 // GA settings
-const PLAYER_AMOUNT     = 50;
+const PLAYER_AMOUNT     = 1000;
 const ITERATIONS        = 1000;
 const START_HIDDEN_SIZE = 1;
-const MUTATION_RATE     = 0.3;
+const MUTATION_RATE     = 0.6;
 const ELITISM_PERCENT   = 0.1;
-const INPUTNODES        = 3;
+const INPUTNODES        = 4;
 const OUTPUTNODES       = 1;
 
 
@@ -21,6 +21,11 @@ const USE_TRAINED_POP = true;
 
 // Global vars
 let neat;
+
+// Methods.mutation.MOD_ACTIVATION.allowed = [
+//   Methods.activation.TANH,
+//   Methods.activation.BIPOLAR,
+// ];
 
 /** varruct the genetic algorithm */
 function initNeat(){
@@ -31,18 +36,34 @@ function initNeat(){
     {
       mutation: [
         Methods.mutation.ADD_NODE,
+        Methods.mutation.ADD_NODE,
         Methods.mutation.SUB_NODE,
+        Methods.mutation.ADD_CONN,
+        Methods.mutation.ADD_CONN,
+        Methods.mutation.ADD_CONN,
+        Methods.mutation.ADD_CONN,
         Methods.mutation.ADD_CONN,
         Methods.mutation.SUB_CONN,
         Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_WEIGHT,
+        Methods.mutation.MOD_BIAS,
         Methods.mutation.MOD_BIAS,
         Methods.mutation.MOD_ACTIVATION,
         Methods.mutation.ADD_GATE,
+        Methods.mutation.ADD_GATE,
+        Methods.mutation.ADD_GATE,
         Methods.mutation.SUB_GATE,
-        Methods.mutation.ADD_SELF_CONN,
-        Methods.mutation.SUB_SELF_CONN,
-        Methods.mutation.ADD_BACK_CONN,
-        Methods.mutation.SUB_BACK_CONN
       ],
       popsize: PLAYER_AMOUNT,
       mutationRate: MUTATION_RATE,
@@ -53,7 +74,6 @@ function initNeat(){
         OUTPUTNODES,
         {
           dropout: 0.5
-          ,
         }
       )
     }
@@ -62,6 +82,11 @@ function initNeat(){
   if(USE_TRAINED_POP){
     neat.population = population;
   }
+
+  // Draw the first genome
+  let best = document.getElementById('best');
+  let bBox = best.getBBox();
+  drawGraph(neat.population[0].graph(bBox.width, bBox.height), '.best');
 }
 
 /** Start the evaluation of the current generation */
@@ -74,16 +99,32 @@ function startEvaluation(){
   }
 }
 
+function calcFitness(genome) {
+  // console.log(genome.score/100, genome.pipes*genome.pipes, genome.nodes.length)
+  return genome.score/100 + genome.pipes*genome.pipes - genome.nodes.length/5;
+}
+
 /** End the evaluation of the current generation */
 function endEvaluation(){
+  for(let genome in neat.population){
+    genome = neat.population[genome];
+    genome.score = calcFitness(genome);
+  }
   console.log('Generation:', neat.generation, '- average score:', neat.getAverage());
 
   neat.sort();
+
+  // Draw the best genome
+  let best = document.getElementById('best');
+  let bBox = best.getBBox();
+  drawGraph(neat.population[0].graph(bBox.width, bBox.height), '.best');
+
   let newPopulation = [];
 
   // Elitism
-  for(let i = 0; i < neat.elitism; i++){
-    newPopulation.push(neat.population[i]);
+  let elitists = [];
+  for (let i = 0; i < neat.elitism; i++) {
+    elitists.push(neat.population[i]);
   }
 
   // Breed the next individuals
@@ -95,5 +136,12 @@ function endEvaluation(){
   neat.population = newPopulation;
   neat.mutate();
 
+  neat.population.push(...elitists);
+
   neat.generation++;
+
+  // Reset the scores
+  for (i = 0; i < neat.population.length; i++) {
+    neat.population[i].score = undefined;
+  }
 }

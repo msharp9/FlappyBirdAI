@@ -3,12 +3,37 @@
 <head>
   <title>Flappy Bird AI: NEAT</title>
   <meta charset="utf-8">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/neataptic.graph.css" />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+
   <script language="javascript" type="text/javascript" src="libraries/p5.js"></script>
   <script language="javascript" type="text/javascript" src="libraries/p5.dom.js"></script>
   <script language="javascript" type="text/javascript" src="libraries/p5.sound.js"></script>
+
+  <script language="javascript" type="text/javascript" src="libraries/d3.v3.min.js"></script>
+  <script language="javascript" type="text/javascript" src="libraries/webcola.js"></script>
+
+
   <script language="javascript" type="text/javascript" src="libraries/neataptic.1.4.7.js"></script>
+  <script language="javascript" type="text/javascript" src="libraries/neataptic.graph.js"></script>
 </head>
 <body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Flappy Bird Clone:</h2>
+        <div id="game"></div>
+      </div>
+      <div class="col-md-6">
+        <h2>Best Genome:</h2>
+        <div>
+          <svg id="best" class="best"/>
+        </div>
+      </div>
+    </div>
+  </div>
   <script language="javascript" type="text/javascript" src="neat.js"></script>
   <script language="javascript" type="text/javascript" src="population.js"></script>
   <script language="javascript" type="text/javascript" src="player.js"></script>

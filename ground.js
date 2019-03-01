@@ -16,6 +16,6 @@ class Ground {
   }
 
   collided(p) {
-    return p.y + p.hs >= this.y
+    return p.y + p.hs >= this.y;
   }
 }

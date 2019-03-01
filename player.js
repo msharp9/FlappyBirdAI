@@ -15,6 +15,9 @@ class Player {
 
     this.brain = genome;
     this.brain.score = 0;
+    this.brain.pipes = 0;
+    this.input = [];
+    this.output = [];
     //Genomesjs
     // this.fitness = 0;
     // this.vision = [];
@@ -40,6 +43,7 @@ class Player {
   update() {
     if (pipes.playerPassed(this.x - this.hs) || pipes2.playerPassed(this.x - this.hs)) {
       this.score++;
+      this.brain.pipes++;
       if (this.score > highscore) {
         highscore = this.score;
       }
@@ -47,10 +51,10 @@ class Player {
 
     this.velY += gravity;
 
-    let input = this.intel();
-    let output = this.brain.activate(input);
+    this.input = this.intel();
+    this.output = this.brain.activate(this.input);
 
-    this.flap(output);
+    this.flap(this.output);
 
     if (!this.dead) {
       this.lifespan++;
@@ -63,6 +67,9 @@ class Player {
     }
     if (!this.isOnGround) {
       this.y += this.velY;
+      if(this.y < 0) {
+        this.y = 0
+      }
     }
     if (!this.isOnGround) {
       this.checkCollisions();
@@ -71,7 +78,7 @@ class Player {
   }
 
   flap(output=1) {
-    if(output > 0) {
+    if(output > 0.5) {
       if (!this.dead && !this.isOnGround) {
         this.velY = -17;
       }
@@ -84,19 +91,18 @@ class Player {
       if (pipes.collided(this)) {
         // print('pipe collosion');
         this.dead = true;
-        deadCount++;
       }
       if (pipes2.collided(this)) {
         // print('pipe collosion');
         this.dead = true;
-        deadCount++;
       }
-      if (ground.collided(this)) {
-        // print('ground collosion');
-        this.dead = true;
-        this.isOnGround = true;
-        deadCount++;
-      }
+    }
+
+    if (ground.collided(this)) {
+      // print('ground collosion');
+      this.dead = true;
+      this.isOnGround = true;
+      deadCount++;
     }
 
     if (this.dead && this.velY<0) {
@@ -106,10 +112,10 @@ class Player {
 
 
   intel() {
-    let closestPipes = ((pipes.x < pipes2.x && this.x < pipes.x) || this.x > pipes2.x) ? pipes : pipes2;
-    let distanceToNextPipe = closestPipes.x - this.x;
-    let distanceToTopPipe = this.y - closestPipes.topPipe.bottomy;
-    let distanceToBottomPipe =  closestPipes.bottomPipe.topy - this.y;
-    return [distanceToNextPipe, distanceToTopPipe, distanceToBottomPipe];
+    let closestPipes = ((pipes.x < pipes2.x && this.x-this.hs < pipes.x) || this.x-this.hs > pipes2.x) ? pipes : pipes2;
+    let distanceToNextPipe = (closestPipes.x - this.x-this.hs)/canvas.width;
+    let distanceToTopPipe = (this.y - closestPipes.topPipe.bottomy)/canvas.height;
+    let distanceToBottomPipe =  (closestPipes.bottomPipe.topy - this.y)/canvas.height;
+    return [this.velY/25, distanceToNextPipe, distanceToTopPipe, distanceToBottomPipe];
   }
 }

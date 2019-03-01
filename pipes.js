@@ -46,9 +46,9 @@ class Pipe {
 
 class Pipes {
   constructor(firstPipe, previousPipe, upToRandNo) {
-    const gap = 200;
+    const gap = 215;
     const minDistFromEdge = 100;
-    const minDistFromBotEdge = canvas.height - minDistFromEdge - 30;
+    const minDistFromBotEdge = canvas.height - minDistFromEdge - gap - 30;
     const maxPipeDifference = 300;
     this.passed = false;
     if (firstPipe) {

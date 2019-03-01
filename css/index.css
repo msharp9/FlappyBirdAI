@@ -1,0 +1,19 @@
+body {
+  background-color: #3E4247;
+  color: white;
+}
+
+.best {
+  width: 100%;
+  height: 800px;
+}
+
+#field {
+  width: 100%;
+  height: 800px;
+}
+
+.container {
+  width: 100%;
+  overflow: hidden;
+}

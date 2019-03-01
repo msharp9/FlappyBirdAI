@@ -30,7 +30,8 @@ function preload() {
 initNeat();
 
 function setup() {
-  window.canvas = createCanvas(600,800);
+  let myCanvas = createCanvas(600,800);
+  myCanvas.parent('game'); 
   gameEnd = false;
   highscore = 0;
   timestep = 0;
